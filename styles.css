@@ -7,6 +7,12 @@
     --color-light-bg: #f9f7f6; /* Cream/Blush background */
     --color-dark-bg: #1a1a1a;
     --font-primary: 'Montserrat', sans-serif;
+    /* Branding & Contact (single source of truth) */
+    --business-name: "The Crown Collective";
+    --tagline: "Crafting Confidence. One Strand at a Time.";
+    --phone-number: "+15551234567";
+    --display-phone: "(555) 123-4567";
+    --email-address: "booking@thecrowncollective.com";
 }
 
 * {
@@ -323,6 +329,40 @@ footer a {
     .about-photo-placeholder {
         order: -1; /* Move photo above text on mobile */
     }
+}
+
+/* --- 11. ACCESSIBILITY: Skip link & focus styles --- */
+.skip-link {
+    position: absolute;
+    left: -999px;
+    top: auto;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+}
+.skip-link:focus,
+.skip-link:focus-visible {
+    position: fixed;
+    left: 20px;
+    top: 20px;
+    width: auto;
+    height: auto;
+    clip: auto;
+    background: var(--color-secondary);
+    color: var(--color-dark-bg);
+    padding: 8px 12px;
+    border-radius: 4px;
+    z-index: 10000;
+    text-decoration: none;
+}
+
+a:focus-visible,
+.cta-button:focus-visible,
+button:focus-visible {
+    outline: 3px solid var(--color-secondary);
+    outline-offset: 2px;
 }
 
 /* For mobile phones */
