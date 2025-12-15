@@ -3,15 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="The Crown Collective — luxury cuts, custom color, and transformative hair design. Book online or contact us for personalized appointments.">
-    <meta property="og:title" content="The Crown Collective — Crafting Confidence. One Strand at a Time.">
-    <meta property="og:description" content="Luxury cuts, custom color, and transformative hair design. Book now.">
+    <!-- Meta tags are populated from `js/config.js` on load. Placeholders kept for non-JS fallback. -->
+    <meta name="description" content="">
+    <meta property="og:title" content="">
+    <meta property="og:description" content="">
     <meta property="og:type" content="website">
     <meta property="og:url" content="">
-    <meta property="og:image" content="assets/og-image.jpg">
+    <meta property="og:image" content="">
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="The Crown Collective">
-    <meta name="twitter:description" content="Luxury cuts, custom color, transformative hair design. Book now.">
+    <meta name="twitter:title" content="">
+    <meta name="twitter:description" content="">
     <link rel="icon" href="favicon.ico">
     <title>The Crown Collective - Crafting Confidence. One Strand at a Time.</title>
     
@@ -19,9 +20,10 @@
 
     <link rel="stylesheet" href="styles.css">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;700&display=swap" rel="stylesheet">
++    <script src="js/config.js" defer></script>
 </head>
 
-<body data-business-name="The Crown Collective" data-tagline="Crafting Confidence. One Strand at a Time.">
+<body>
 
     <a class="skip-link" href="#main-content">Skip to content</a>
 
@@ -88,45 +90,72 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // Helper to safely read CSS custom properties from computed style
-            const getVar = (name, fallback = '') => {
-                try {
-                    const value = getComputedStyle(document.documentElement).getPropertyValue(name);
-                    return value ? value.replace(/"/g, '').trim() : fallback;
-                } catch (e) {
-                    return fallback;
-                }
-            };
-
-            const businessName = getVar('--business-name', 'The Crown Collective');
-            const tagline = getVar('--tagline', 'Crafting Confidence. One Strand at a Time.');
-            const phoneNumber = getVar('--phone-number', '');
-            const displayPhone = getVar('--display-phone', '');
-            const emailAddress = getVar('--email-address', '');
-
-            // Inject content defensively
-            const logoEl = document.querySelector('.logo');
-            if (logoEl && businessName) logoEl.textContent = businessName;
-
-            const heroTag = document.querySelector('.hero-tagline');
-            if (heroTag && tagline) heroTag.textContent = tagline;
-
-            const footerName = document.getElementById('footer-name');
-            const year = new Date().getFullYear();
-            if (footerName) footerName.textContent = `© ${year} ${businessName}. All Rights Reserved.`;
-
-            const phoneLink = document.getElementById('contact-phone');
-            if (phoneLink && phoneNumber) {
-                phoneLink.href = `tel:${phoneNumber}`;
-                phoneLink.textContent = displayPhone || phoneNumber;
-            }
-
-            const emailLink = document.getElementById('contact-email');
-            if (emailLink && emailAddress) {
-                emailLink.href = `mailto:${emailAddress}`;
-                emailLink.textContent = emailAddress;
-            }
-        });
-    </script>
+            // Prefer SITE_CONFIG from js/config.js; fall back to CSS vars if needed
++            const cfg = window.SITE_CONFIG || {};
++
++            const getVar = (name, fallback = '') => {
++                if (cfg && cfg[name]) return cfg[name];
++                try {
++                    const value = getComputedStyle(document.documentElement).getPropertyValue(name);
++                    return value ? value.replace(/"/g, '').trim() : fallback;
++                } catch (e) {
++                    return fallback;
++                }
++            };
++
++            const businessName = cfg.businessName || getVar('--business-name', 'The Crown Collective');
++            const tagline = cfg.tagline || getVar('--tagline', 'Crafting Confidence. One Strand at a Time.');
++            const phoneNumber = cfg.phoneNumber || getVar('--phone-number', '');
++            const displayPhone = cfg.displayPhone || getVar('--display-phone', '');
++            const emailAddress = cfg.emailAddress || getVar('--email-address', '');
++            const address = cfg.address || '';
++
++            // Populate meta tags from config when available
++            const setMeta = (selector, value) => {
++                const el = document.querySelector(selector);
++                if (el && value) el.setAttribute('content', value);
++            };
++            if (cfg) {
++                setMeta('meta[name="description"]', cfg.metaDescription);
++                setMeta('meta[property="og:title"]', `${cfg.businessName} — ${cfg.tagline}`);
++                setMeta('meta[property="og:description"]', cfg.metaDescription);
++                setMeta('meta[property="og:url"]', cfg.siteUrl);
++                setMeta('meta[property="og:image"]', cfg.ogImage);
++                setMeta('meta[name="twitter:title"]', cfg.businessName);
++                setMeta('meta[name="twitter:description"]', cfg.metaDescription);
++            }
++
++            // Inject content defensively
++            const logoEl = document.querySelector('.logo');
++            if (logoEl && businessName) logoEl.textContent = businessName;
++
++            const heroTag = document.querySelector('.hero-tagline');
++            if (heroTag && tagline) heroTag.textContent = tagline;
++
++            const footerName = document.getElementById('footer-name');
++            const year = (cfg && cfg.year) || new Date().getFullYear();
++            if (footerName) footerName.textContent = `© ${year} ${businessName}. All Rights Reserved.`;
++
++            const phoneLink = document.getElementById('contact-phone');
++            if (phoneLink && phoneNumber) {
++                phoneLink.href = `tel:${phoneNumber}`;
++                phoneLink.textContent = displayPhone || phoneNumber;
++            }
++
++            const emailLink = document.getElementById('contact-email');
++            if (emailLink && emailAddress) {
++                emailLink.href = `mailto:${emailAddress}`;
++                emailLink.textContent = emailAddress;
++            }
++
++            // Populate social links
++            if (cfg && cfg.social) {
++                const insta = document.querySelector('.social-links a[href*="instagram.com"]');
++                const fb = document.querySelector('.social-links a[href*="facebook.com"]');
++                if (insta && cfg.social.instagram) insta.href = cfg.social.instagram;
++                if (fb && cfg.social.facebook) fb.href = cfg.social.facebook;
++            }
++        });
++    </script>
 </body>
 </html>

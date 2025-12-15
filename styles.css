@@ -7,12 +7,7 @@
     --color-light-bg: #f9f7f6; /* Cream/Blush background */
     --color-dark-bg: #1a1a1a;
     --font-primary: 'Montserrat', sans-serif;
-    /* Branding & Contact (single source of truth) */
-    --business-name: "The Crown Collective";
-    --tagline: "Crafting Confidence. One Strand at a Time.";
-    --phone-number: "+15551234567";
-    --display-phone: "(555) 123-4567";
-    --email-address: "booking@thecrowncollective.com";
+    /* Keep presentation variables here (colors, fonts). Move branding & contact details to `js/config.js` */
 }
 
 * {
